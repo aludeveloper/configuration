@@ -21,7 +21,8 @@
   unarchive:
     copy: no
     src: /tmp/android-sdk.tgz
-    dest: "{{ android_home }}"
+    dest: /opt
+    creates: "{{ android_home }}"
     owner: "{{ jenkins_user }}"
     group: "{{ jenkins_user }}" 
   become: yes
