@@ -2,7 +2,7 @@
   "variables": {
     "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
     "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
-    "bootstrap_remote_dir": "/tmp/ansible-bootstrap",
+    "playbook_remote_dir": "/tmp/packer-edx-playbooks",
     "ami": "{{env `JENKINS_WORKER_AMI`}}",
     "delete_or_keep": "{{env `DELETE_OR_KEEP_AMI`}}",
     "remote_branch": "{{env `REMOTE_BRANCH`}}"
@@ -25,22 +25,32 @@
   }],
   "provisioners": [{
     "type": "shell",
-    "inline": ["rm -rf {{user `bootstrap_remote_dir`}}",
-      "mkdir {{user `bootstrap_remote_dir`}}"]
+    "inline": ["rm -rf {{user `playbook_remote_dir`}}",
+      "mkdir {{user `playbook_remote_dir`}}"]
+  }, {
+        "type": "file",
+        "source": "../../playbooks/run_role.yml",
+        "destination": "{{user `playbook_remote_dir`}}/run_role.yml"
+  }, {
+    "type": "file",
+    "source": "../../playbooks/roles",
+    "destination": "{{user `playbook_remote_dir`}}/roles"
+  }, {
+      "type": "file",
+      "source": "../../playbooks/edx-east",
+      "destination": "{{user `playbook_remote_dir`}}/edx-east"
   }, {
     "type": "file",
     "source": "../../util/install/ansible-bootstrap.sh",
-    "destination": "{{user `bootstrap_remote_dir`}}/ansible-bootstrap.sh"
+    "destination": "{{user `playbook_remote_dir`}}/ansible-bootstrap.sh"
   }, {
     "type": "shell",
-    "inline": ["cd {{user `bootstrap_remote_dir`}}",
+    "inline": ["cd {{user `playbook_remote_dir`}}",
       "export CONFIGURATION_VERSION='{{user `remote_branch`}}'",
       "sudo bash ./ansible-bootstrap.sh",
       ". /edx/app/edx_ansible/venvs/edx_ansible/bin/activate",
-      "sudo chown -R ubuntu /tmp/configuration",
-      "cd /tmp/configuration",
       "echo '[jenkins_worker]' > inventory.ini",
       "echo 'localhost' >> inventory.ini",
-      "ansible-playbook playbooks/edx-east/jenkins_worker_android.yml -i inventory.ini -c local -vvvv"]
+      "ansible-playbook edx-east/jenkins_worker_android.yml -i inventory.ini -c local -vvvv"]
   }]
 }
