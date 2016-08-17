@@ -34,8 +34,10 @@
   }, {
     "type": "shell",
     "inline": ["cd {{user `bootstrap_remote_dir`}}",
-      "bash ./ansible-bootstrap.sh",
+      "export CONFIGURATION_VERSION='{{user `remote_branch`}}'",
+      "sudo bash ./ansible-bootstrap.sh",
       ". /edx/app/edx_ansible/venvs/edx_ansible/bin/activate",
+      "chown -R ubuntu /tmp/configuration",
       "cd /tmp/configuration",
       "echo '[jenkins_worker]' > inventory.ini",
       "echo 'localhost' >> inventory.ini",
