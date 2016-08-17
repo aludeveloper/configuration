@@ -2,7 +2,7 @@
 # User to manage Android SDK
 jenkins_user: "jenkins"
 # Tarball to download
-android_dowload: "android-sdk_r24.4.1-linux.tgz"
+android_download: "android-sdk_r24.4.1-linux.tgz"
 # Checksum of Android SDK (from: https://developer.android.com/studio/index.html#downloads)
 android_checksum: "725bb360f0f7d04eaccff5a2d57abdd49061326d"
 # path to installed android sdk
