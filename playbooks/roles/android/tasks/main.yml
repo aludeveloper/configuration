@@ -22,8 +22,8 @@
     copy: no
     src: /tmp/android-sdk.tgz
     dest: "{{ android_home }}"
-    owner: stu
-    group: stu
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_user }}" 
   become: yes
 # Use the android sdk manager to install the build targets necessary for the edx mobile app
 - name: Install Android API levels
