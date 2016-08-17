@@ -1,0 +1,30 @@
+---
+# Configure the Jenkins worker system for building the edx android application
+
+# Download the Android SDK/tools tarball from Google's download site. 
+# NOTE: while it is the general policy to use repositories/ppas as much as possible
+#       it did not seem reliable for this work. Other avenues were explored:
+#   - pre-Ubuntu 16 releases do not contain the android sdk in their apt repos
+#   - the existing ppas containing the sdk are questionable
+#   - ubuntu-make did not seem reliable at the time of writing this
+- name: Download the Android SDK tarball
+  get_url:
+    url: "https://dl.google.com/android/{{ android_download }}"
+    dest: /tmp/android-sdk.tgz
+- name: Verify checksum of Android SDK
+  shell: "sha1sum /tmp/android-sdk.tgz"
+  register: sdk_checksum
+- assert:
+    that:
+      "'{{ android_checksum }}' in sdk_checksum.stdout"
+- name: Unarchive tarball to /opt/android-sdk
+  unarchive:
+    copy: no
+    src: /tmp/android-sdk.tgz
+    dest: "{{ android_home }}"
+    owner: stu
+    group: stu
+  become: yes
+# Use the android sdk manager to install the build targets necessary for the edx mobile app
+- name: Install Android API levels
+  shell: "echo 'y' | {{ android_home }}/tools/android update sdk --no-ui --filter {{ ','.join(android_build_targets) }}"
