@@ -49,8 +49,9 @@
       "export CONFIGURATION_VERSION='{{user `remote_branch`}}'",
       "sudo bash ./ansible-bootstrap.sh",
       ". /edx/app/edx_ansible/venvs/edx_ansible/bin/activate",
+      "cd edx-east",
       "echo '[jenkins_worker]' > inventory.ini",
       "echo 'localhost' >> inventory.ini",
-      "ansible-playbook edx-east/jenkins_worker_android.yml -i inventory.ini -c local -vvvv"]
+      "ansible-playbook jenkins_worker_android.yml -i inventory.ini -c local -vvvv"]
   }]
 }
